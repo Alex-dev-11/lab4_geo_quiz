@@ -72,7 +72,27 @@ fun GeoQuizScreen(){
     var currentQuestionIndex by remember { mutableStateOf(0) } // Текущий вопрос
     var userAnswer by remember { mutableStateOf<Boolean?>(null) } // Ответ пользователя
     var correctAnswersCount by remember { mutableStateOf(0) } // Правильный ответ
-    var showResultDialog by remember { mutableStateOf(false) } // Показывать ли кнопки ответа
+    var showResultDialog by remember { mutableStateOf(false) } // Показывать ли вопросы (выключение после всех вопросов)
     var isQuizFinished by remember { mutableStateOf(false) } // Квиз завершён
+
+    // Текущий вопрос
+    val currentQuestion = questions[currentQuestionIndex]
+
+    // Функция для обработки ответа пользователя
+    fun handleAnswer(userAnswer: Boolean) {
+        //this.userAnswer = userAnswer
+
+        // Проверяем правильность ответа
+        if (userAnswer == currentQuestion.answer) {
+            correctAnswersCount++
+        }
+
+        // Проверяем, был ли это последний вопрос
+        if (currentQuestionIndex == questions.size - 1) {
+            isQuizFinished = true
+            showResultDialog = true
+        }
+    }
+
 
 }

@@ -41,6 +41,8 @@ data class Question(
     val answer: Boolean
 )
 
+
+
 @Composable
 fun GeoQuizApp() {
     MaterialTheme {
@@ -51,4 +53,26 @@ fun GeoQuizApp() {
             //GeoQuizScreen()
         }
     }
+}
+
+@Composable
+fun GeoQuizScreen(){
+
+    // Список вопросов и ответов
+    val questions = listOf(
+        Question("Canberra is the capital of Australia.", true),
+        Question("The Pacific Ocean is larger than the Atlantic Ocean.", true),
+        Question("The Suez Canal connects the Red Sea and the Indian Ocean.", false),
+        Question("The source of the Nile River is in Egypt.", false),
+        Question("The Amazon River is the longest river in the Americas.", true),
+        Question("Lake Baikal is the world's oldest and deepest freshwater lake.", true)
+    )
+
+    // Состояния приложения
+    var currentQuestionIndex by remember { mutableStateOf(0) } // Текущий вопрос
+    var userAnswer by remember { mutableStateOf<Boolean?>(null) } // Ответ пользователя
+    var correctAnswersCount by remember { mutableStateOf(0) } // Правильный ответ
+    var showResultDialog by remember { mutableStateOf(false) } // Показывать ли кнопки ответа
+    var isQuizFinished by remember { mutableStateOf(false) } // Квиз завершён
+
 }

@@ -95,4 +95,53 @@ fun GeoQuizScreen(){
     }
 
 
+    // Функция для перехода к следующему вопросу
+    fun nextQuestion() {
+        if (currentQuestionIndex < questions.size - 1) {
+            currentQuestionIndex++
+            userAnswer = null // Сбрасываем ответ для нового вопроса
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        // Заголовок приложения
+        Text(
+            text = "GeoQuiz",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 40.dp)
+        )
+
+        // Счетчик вопросов
+        Text(
+            text = "Question ${currentQuestionIndex + 1} of ${questions.size}",
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Текст вопроса
+        Text(
+            text = currentQuestion.text,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 32.dp)
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+
+    }
+
+
 }

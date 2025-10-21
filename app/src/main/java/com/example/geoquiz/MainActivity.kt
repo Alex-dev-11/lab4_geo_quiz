@@ -197,7 +197,36 @@ fun GeoQuizScreen(){
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Кнопка NEXT (заблокирована и невидима после последнего вопроса)
+        if (!isQuizFinished && userAnswer != null) {
+            Button(
+                onClick = { nextQuestion() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                enabled = currentQuestionIndex < questions.size - 1,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.tertiary
+                )
+            ) {
+                Text(
+                    text = if (currentQuestionIndex < questions.size - 1) "NEXT QUESTION"
+                    else "SHOW RESULTS",
+                    fontSize = 18.sp
+                )
+            }
+        }
+
+        // Индикатор прогресса
+        Text(
+            text = "Correct answers: $correctAnswersCount/${questions.size}",
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.padding(top = 32.dp)
+        )
     }
+
+
 
 
 }

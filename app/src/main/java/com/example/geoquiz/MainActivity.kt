@@ -140,6 +140,62 @@ fun GeoQuizScreen(){
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Кнопки ответов (видны только если пользователь еще не ответил на текущий вопрос)
+        if (userAnswer == null && !isQuizFinished) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                // Кнопка TRUE
+                Button(
+                    onClick = { handleAnswer(true) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("TRUE", fontSize = 18.sp)
+                }
+
+                // Кнопка FALSE
+                Button(
+                    onClick = { handleAnswer(false) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    )
+                ) {
+                    Text("FALSE", fontSize = 18.sp)
+                }
+            }
+        } else {
+            // Показываем результат ответа, если пользователь ответил
+            if (userAnswer != null) {
+                val isCorrect = userAnswer == currentQuestion.answer
+                Text(
+                    text = if (isCorrect) "✓ Верно!" else "✗ Неверно!",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (isCorrect) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.error, // смена темы в зависимости от ответа.
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+
+                // Показываем правильный ответ
+                Text(
+                    text = "Correct answer: ${if (currentQuestion.answer) "TRUE" else "FALSE"}",
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
 
     }
 

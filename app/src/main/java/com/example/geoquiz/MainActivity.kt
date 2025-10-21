@@ -226,7 +226,44 @@ fun GeoQuizScreen(){
         )
     }
 
+    // Диалоговое окно с результатами (появляется после последнего вопроса)
+    if (showResultDialog) {
+        AlertDialog(
+            onDismissRequest = { showResultDialog = false },
+            title = {
+                Text(
+                    text = "Quiz Completed!",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "Ваш результат: $correctAnswersCount правильных ответов из ${questions.size}",
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "В процентах: ${(correctAnswersCount.toDouble() / questions.size * 100).toInt()}%",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
 
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showResultDialog = false
+                        // Можно добавить сброс викторины здесь, если нужно
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 
 
 }

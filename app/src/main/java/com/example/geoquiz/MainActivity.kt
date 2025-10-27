@@ -50,7 +50,7 @@ fun GeoQuizApp() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            //GeoQuizScreen()
+            GeoQuizScreen()
         }
     }
 }
@@ -74,16 +74,21 @@ fun GeoQuizScreen(){
     var correctAnswersCount by remember { mutableStateOf(0) } // Правильный ответ
     var showResultDialog by remember { mutableStateOf(false) } // Показывать ли вопросы (выключение после всех вопросов)
     var isQuizFinished by remember { mutableStateOf(false) } // Квиз завершён
-
+    var hasAnsweredCurrentQuestion by remember { mutableStateOf(false) }
     // Текущий вопрос
     val currentQuestion = questions[currentQuestionIndex]
 
     // Функция для обработки ответа пользователя
-    fun handleAnswer(userAnswer: Boolean) {
+    fun handleAnswer(userAnswerValue: Boolean) {
         //this.userAnswer = userAnswer
 
-        // Проверяем правильность ответа
-        if (userAnswer == currentQuestion.answer) {
+        if (hasAnsweredCurrentQuestion) return
+
+        userAnswer = userAnswerValue
+        hasAnsweredCurrentQuestion = true
+
+        // Проверяем правильность ответа только один раз за вопрос
+        if (userAnswerValue == currentQuestion.answer) {
             correctAnswersCount++
         }
 
@@ -100,6 +105,8 @@ fun GeoQuizScreen(){
         if (currentQuestionIndex < questions.size - 1) {
             currentQuestionIndex++
             userAnswer = null // Сбрасываем ответ для нового вопроса
+
+            hasAnsweredCurrentQuestion = false // РАЗРЕШАЕМ ОТВЕЧАТЬ НА НОВЫЙ ВОПРОС
         }
     }
 
@@ -141,7 +148,7 @@ fun GeoQuizScreen(){
         Spacer(modifier = Modifier.height(32.dp))
 
         // Кнопки ответов (видны только если пользователь еще не ответил на текущий вопрос)
-        if (userAnswer == null && !isQuizFinished) {
+        if (!hasAnsweredCurrentQuestion && !isQuizFinished) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -174,10 +181,10 @@ fun GeoQuizScreen(){
             }
         } else {
             // Показываем результат ответа, если пользователь ответил
-            if (userAnswer != null) {
+            if (hasAnsweredCurrentQuestion) {
                 val isCorrect = userAnswer == currentQuestion.answer
                 Text(
-                    text = if (isCorrect) "✓ Верно!" else "✗ Неверно!",
+                    text = if (isCorrect) "Верно!" else "Неверно!",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = if (isCorrect) MaterialTheme.colorScheme.primary
@@ -187,7 +194,7 @@ fun GeoQuizScreen(){
 
                 // Показываем правильный ответ
                 Text(
-                    text = "Correct answer: ${if (currentQuestion.answer) "TRUE" else "FALSE"}",
+                    text = "Правильный ответ: ${if (currentQuestion.answer) "TRUE" else "FALSE"}",
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     modifier = Modifier.padding(bottom = 24.dp)
@@ -198,7 +205,7 @@ fun GeoQuizScreen(){
         Spacer(modifier = Modifier.height(32.dp))
 
         // Кнопка NEXT (заблокирована и невидима после последнего вопроса)
-        if (!isQuizFinished && userAnswer != null) {
+        if (hasAnsweredCurrentQuestion && !isQuizFinished) {
             Button(
                 onClick = { nextQuestion() },
                 modifier = Modifier
@@ -210,8 +217,8 @@ fun GeoQuizScreen(){
                 )
             ) {
                 Text(
-                    text = if (currentQuestionIndex < questions.size - 1) "NEXT QUESTION"
-                    else "SHOW RESULTS",
+                    text = if (currentQuestionIndex < questions.size - 1) "СЛЕДУЮЩИЙ ВОПРОС"
+                    else "РЕЗУЛЬТАТЫ",
                     fontSize = 18.sp
                 )
             }
@@ -219,7 +226,7 @@ fun GeoQuizScreen(){
 
         // Индикатор прогресса
         Text(
-            text = "Correct answers: $correctAnswersCount/${questions.size}",
+            text = "Правильных ответов: $correctAnswersCount/${questions.size}",
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             modifier = Modifier.padding(top = 32.dp)
@@ -232,7 +239,7 @@ fun GeoQuizScreen(){
             onDismissRequest = { showResultDialog = false },
             title = {
                 Text(
-                    text = "Quiz Completed!",
+                    text = "Вы прошли квиз!",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
